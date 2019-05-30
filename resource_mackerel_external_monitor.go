@@ -18,10 +18,6 @@ func resourceMackerelExternalMonitor() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"id": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
@@ -165,25 +161,30 @@ func getMackerelExternalMonitorInput(d *schema.ResourceData) *mackerel.MonitorEx
 		input.NotificationInterval = uint64(v.(int))
 	}
 	if v, ok := d.GetOk("response_time_duration"); ok {
-		input.ResponseTimeDuration = v.(float64)
+		x := uint64(v.(int))
+		input.ResponseTimeDuration = &x
 	}
 	if v, ok := d.GetOk("response_time_warning"); ok {
-		input.ResponseTimeWarning = v.(float64)
+		x := v.(float64)
+		input.ResponseTimeWarning = &x
 	}
 	if v, ok := d.GetOk("response_time_critical"); ok {
-		input.ResponseTimeCritical = v.(float64)
+		x := v.(float64)
+		input.ResponseTimeCritical = &x
 	}
 	if v, ok := d.GetOk("contains_string"); ok {
 		input.ContainsString = v.(string)
 	}
 	if v, ok := d.GetOk("max_check_attempts"); ok {
-		input.MaxCheckAttempts = v.(float64)
+		input.MaxCheckAttempts = uint64(v.(int))
 	}
 	if v, ok := d.GetOk("certification_expiration_warning"); ok {
-		input.CertificationExpirationWarning = uint64(v.(int))
+		x := uint64(v.(int))
+		input.CertificationExpirationWarning = &x
 	}
 	if v, ok := d.GetOk("certification_expiration_critical"); ok {
-		input.CertificationExpirationCritical = uint64(v.(int))
+		x := uint64(v.(int))
+		input.CertificationExpirationCritical = &x
 	}
 	if v, ok := d.GetOk("is_mute"); ok {
 		input.IsMute = v.(bool)

@@ -18,10 +18,6 @@ func resourceMackerelDashboard() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"id": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"title": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,

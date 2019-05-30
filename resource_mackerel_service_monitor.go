@@ -18,10 +18,6 @@ func resourceMackerelServiceMonitor() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"id": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
@@ -65,6 +61,9 @@ func resourceMackerelServiceMonitor() *schema.Resource {
 func resourceMackerelServiceMonitorCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*mackerel.Client)
 
+	warning := d.Get("warning").(float64)
+	critical := d.Get("critical").(float64)
+
 	input := &mackerel.MonitorServiceMetric{
 		Type:                 "service",
 		Name:                 d.Get("name").(string),
@@ -72,8 +71,8 @@ func resourceMackerelServiceMonitorCreate(d *schema.ResourceData, meta interface
 		Duration:             uint64(d.Get("duration").(int)),
 		Metric:               d.Get("metric").(string),
 		Operator:             d.Get("operator").(string),
-		Warning:              d.Get("warning").(float64),
-		Critical:             d.Get("critical").(float64),
+		Warning:              &warning,
+		Critical:             &critical,
 		NotificationInterval: uint64(d.Get("notification_interval").(int)),
 		IsMute:               d.Get("is_mute").(bool),
 	}
@@ -121,6 +120,9 @@ func resourceMackerelServiceMonitorRead(d *schema.ResourceData, meta interface{}
 func resourceMackerelServiceMonitorUpdate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*mackerel.Client)
 
+	warning := d.Get("warning").(float64)
+	critical := d.Get("critical").(float64)
+
 	input := &mackerel.MonitorServiceMetric{
 		Type:                 "service",
 		Name:                 d.Get("name").(string),
@@ -128,8 +130,8 @@ func resourceMackerelServiceMonitorUpdate(d *schema.ResourceData, meta interface
 		Duration:             uint64(d.Get("duration").(int)),
 		Metric:               d.Get("metric").(string),
 		Operator:             d.Get("operator").(string),
-		Warning:              d.Get("warning").(float64),
-		Critical:             d.Get("critical").(float64),
+		Warning:              &warning,
+		Critical:             &critical,
 		NotificationInterval: uint64(d.Get("notification_interval").(int)),
 		IsMute:               d.Get("is_mute").(bool),
 	}

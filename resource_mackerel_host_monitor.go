@@ -18,10 +18,6 @@ func resourceMackerelHostMonitor() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"id": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
@@ -70,6 +66,8 @@ func resourceMackerelHostMonitor() *schema.Resource {
 
 func resourceMackerelHostMonitorCreate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*mackerel.Client)
+	warning := d.Get("warning").(float64)
+	critical := d.Get("critical").(float64)
 
 	input := &mackerel.MonitorHostMetric{
 		Type:                 "host",
@@ -77,8 +75,8 @@ func resourceMackerelHostMonitorCreate(d *schema.ResourceData, meta interface{})
 		Duration:             uint64(d.Get("duration").(int)),
 		Metric:               d.Get("metric").(string),
 		Operator:             d.Get("operator").(string),
-		Warning:              d.Get("warning").(float64),
-		Critical:             d.Get("critical").(float64),
+		Warning:              &warning,
+		Critical:             &critical,
 		NotificationInterval: uint64(d.Get("notification_interval").(int)),
 		IsMute:               d.Get("is_mute").(bool),
 	}
@@ -135,14 +133,17 @@ func resourceMackerelHostMonitorRead(d *schema.ResourceData, meta interface{}) e
 func resourceMackerelHostMonitorUpdate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*mackerel.Client)
 
+	warning := d.Get("warning").(float64)
+	critical := d.Get("critical").(float64)
+
 	input := &mackerel.MonitorHostMetric{
 		Type:                 "host",
 		Name:                 d.Get("name").(string),
 		Duration:             uint64(d.Get("duration").(int)),
 		Metric:               d.Get("metric").(string),
 		Operator:             d.Get("operator").(string),
-		Warning:              d.Get("warning").(float64),
-		Critical:             d.Get("critical").(float64),
+		Warning:              &warning,
+		Critical:             &critical,
 		NotificationInterval: uint64(d.Get("notification_interval").(int)),
 		IsMute:               d.Get("is_mute").(bool),
 	}

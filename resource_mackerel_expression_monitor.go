@@ -18,10 +18,6 @@ func resourceMackerelExpressionMonitor() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"id": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
@@ -62,8 +58,8 @@ func resourceMackerelExpressionMonitorCreate(d *schema.ResourceData, meta interf
 		Name:                 d.Get("name").(string),
 		Expression:           d.Get("expression").(string),
 		Operator:             d.Get("operator").(string),
-		Warning:              d.Get("warning").(float64),
-		Critical:             d.Get("critical").(float64),
+		Warning:              d.Get("warning").(*float64),
+		Critical:             d.Get("critical").(*float64),
 		NotificationInterval: uint64(d.Get("notification_interval").(int)),
 		IsMute:               d.Get("is_mute").(bool),
 	}
@@ -109,13 +105,15 @@ func resourceMackerelExpressionMonitorRead(d *schema.ResourceData, meta interfac
 func resourceMackerelExpressionMonitorUpdate(d *schema.ResourceData, meta interface{}) error {
 	client := meta.(*mackerel.Client)
 
+	warning := d.Get("warning").(float64)
+	critical := d.Get("critical").(float64)
 	input := &mackerel.MonitorExpression{
 		Type:                 "expression",
 		Name:                 d.Get("name").(string),
 		Expression:           d.Get("expression").(string),
 		Operator:             d.Get("operator").(string),
-		Warning:              d.Get("warning").(float64),
-		Critical:             d.Get("critical").(float64),
+		Warning:              &warning,
+		Critical:             &critical,
 		NotificationInterval: uint64(d.Get("notification_interval").(int)),
 		IsMute:               d.Get("is_mute").(bool),
 	}
